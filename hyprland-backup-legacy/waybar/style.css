@@ -1,0 +1,169 @@
+* {
+    font-family: "Inter", "Noto Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* ───────── Barra ───────── */
+
+window#waybar {
+    background: rgba(7, 9, 13, 0.92);
+    color: #ffffff;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.045);
+}
+
+/* ───────── Elementos ───────── */
+
+#workspaces,
+#clock,
+#network,
+#pulseaudio,
+#battery {
+    margin: 4px 3px;
+
+    background: rgba(255, 255, 255, 0.035);
+
+    border: 1px solid rgba(255, 255, 255, 0.055);
+    border-radius: 13px;
+}
+
+/* ───────── Workspaces ───────── */
+
+#workspaces {
+    padding: 0 8px;
+    margin-left: 4px;
+}
+
+#workspaces button {
+    min-width: 10px;
+    min-height: 10px;
+
+    margin: 0 5px;
+    padding: 0;
+
+    color: rgba(255, 255, 255, 0.28);
+    background: transparent;
+
+    border: none;
+    box-shadow: none;
+}
+
+#workspaces button:hover {
+    color: rgba(255, 255, 255, 0.60);
+    background: transparent;
+}
+
+#workspaces button.active {
+    color: #33ccff;
+    background: transparent;
+}
+/* ───────── Reloj ───────── */
+
+#clock {
+    padding: 0 18px;
+
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    letter-spacing: 0.4px;
+
+    background: rgba(255, 255, 255, 0.045);
+}
+
+/* ───────── Red ───────── */
+
+#network {
+    padding: 0 14px;
+
+    color: #8de7ff;
+}
+
+/* ───────── Audio ───────── */
+
+#pulseaudio {
+    padding: 0 14px;
+
+    color: #b8f7d4;
+}
+
+#pulseaudio.muted {
+    color: #858992;
+}
+
+/* ───────── Batería ───────── */
+
+#battery {
+    padding: 0 14px;
+
+    color: #d6d6d6;
+}
+
+#battery.warning {
+    color: #ffd166;
+}
+
+#battery.critical {
+    color: #ff6b6b;
+}
+
+/* ───────── Hover ───────── */
+
+#clock:hover,
+#network:hover,
+#pulseaudio:hover,
+#battery:hover {
+    background: rgba(255, 255, 255, 0.065);
+}
+
+/* ───────── Separación ───────── */
+
+#network {
+    margin-left: 5px;
+}
+
+#pulseaudio,
+#battery {
+    margin-left: 2px;
+}
+#custom-wifi {
+    min-width: 18px;
+    min-height: 18px;
+
+    margin: 4px 3px;
+    padding: 0 10px;
+
+    background-color: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.055);
+    border-radius: 13px;
+
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 18px 18px;
+}
+
+#custom-wifi.excellent {
+    background-image: url("file:///home/luisfernando/.config/waybar/icons/wifi-excellent.svg");
+}
+
+#custom-wifi.good {
+    background-image: url("file:///home/luisfernando/.config/waybar/icons/wifi-good.svg");
+}
+
+#custom-wifi.ok {
+    background-image: url("file:///home/luisfernando/.config/waybar/icons/wifi-ok.svg");
+}
+
+#custom-wifi.weak {
+    background-image: url("file:///home/luisfernando/.config/waybar/icons/wifi-weak.svg");
+}
+
+#custom-wifi.offline {
+    background-image: url("file:///home/luisfernando/.config/waybar/icons/wifi-offline.svg");
+}
+
+#custom-wifi:hover {
+    background-color: rgba(255, 255, 255, 0.065);
+}

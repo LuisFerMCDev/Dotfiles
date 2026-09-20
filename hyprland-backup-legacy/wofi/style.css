@@ -1,0 +1,88 @@
+* {
+    font-family: "Inter", "Noto Sans", sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+/* ───────── Ventana ───────── */
+
+window {
+    background-color: rgba(10, 12, 16, 0.94);
+    border: 1px solid rgba(51, 204, 255, 0.18);
+    border-radius: 24px;
+}
+
+/* ───────── Contenedores ───────── */
+
+#outer-box {
+    padding: 12px;
+}
+
+#inner-box {
+    margin: 4px 6px 10px 6px;
+}
+
+#scroll {
+    margin: 0;
+}
+
+/* ───────── Buscador ───────── */
+
+#input {
+    margin: 8px 8px 16px 8px;
+    padding: 15px 20px;
+
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 16px;
+
+    background-color: rgba(255, 255, 255, 0.055);
+
+    color: #ffffff;
+}
+
+#input:focus {
+    border: 1px solid rgba(51, 204, 255, 0.45);
+    background-color: rgba(255, 255, 255, 0.075);
+}
+
+/* ───────── Aplicaciones ───────── */
+
+#entry {
+    min-height: 42px;
+
+    margin: 3px 4px;
+    padding: 8px 14px;
+
+    border-radius: 14px;
+
+    background-color: transparent;
+    color: rgba(255, 255, 255, 0.70);
+}
+
+#entry:hover {
+    background-color: rgba(255, 255, 255, 0.055);
+    color: #ffffff;
+}
+
+/* ───────── Selección ───────── */
+
+#entry:selected {
+    background-color: rgba(51, 204, 255, 0.10);
+    color: #ffffff;
+
+    border-left: 3px solid rgba(51, 204, 255, 0.95);
+}
+
+/* ───────── Iconos ───────── */
+
+#img {
+    margin-right: 13px;
+    min-width: 30px;
+    min-height: 30px;
+}
+
+/* ───────── Texto ───────── */
+
+#text {
+    margin-left: 4px;
+}

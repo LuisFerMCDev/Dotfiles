@@ -1,0 +1,26 @@
+#!/bin/bash
+
+TEMP="/tmp/screenshot-$(date +%s).png"
+
+grim -g "$(slurp)" "$TEMP" || exit 0
+
+CHOICE=$(printf "📋  Copiar al portapapeles\n💾  Guardar como archivo\n❌  Cancelar" | rofi -dmenu -theme "$HOME/.config/rofi/screenshot.rasi" -p "Captura de pantalla")
+
+case "$CHOICE" in
+    "📋  Copiar al portapapeles")
+        wl-copy < "$TEMP"
+        ;;
+
+    "💾  Guardar como archivo")
+        mkdir -p "$HOME/Imágenes/Capturas"
+
+        FILE="$HOME/Imágenes/Capturas/captura-$(date +%Y-%m-%d_%H-%M-%S).png"
+
+        cp "$TEMP" "$FILE"
+        ;;
+
+    *)
+        ;;
+esac
+
+rm -f "$TEMP"

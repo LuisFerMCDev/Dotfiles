@@ -1,0 +1,10 @@
+show=drun
+width=620
+height=430
+location=top
+y=180
+allow_images=true
+prompt=Buscar aplicaciones...
+term=kitty
+insensitive=true
+no_actions=true

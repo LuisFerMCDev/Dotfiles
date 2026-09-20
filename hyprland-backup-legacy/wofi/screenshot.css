@@ -1,0 +1,57 @@
+* {
+    font-family: "Inter", "Noto Sans", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+window {
+    background-color: rgba(10, 12, 16, 0.96);
+    border: 1px solid rgba(51, 204, 255, 0.25);
+    border-radius: 22px;
+}
+
+#outer-box {
+    padding: 14px;
+}
+
+#input {
+    margin: 8px 8px 14px 8px;
+    padding: 14px 18px;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 15px;
+
+    background-color: rgba(255, 255, 255, 0.055);
+    color: #ffffff;
+}
+
+#scroll {
+    min-height: 180px;
+    margin: 0 4px;
+}
+
+#entry {
+    min-height: 52px;
+    margin: 5px 4px;
+    padding: 10px 16px;
+
+    border-radius: 15px;
+    background-color: transparent;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+#entry:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+}
+
+#entry:selected {
+    background-color: rgba(51, 204, 255, 0.12);
+    color: #ffffff;
+
+    border-left: 3px solid #33ccff;
+}
+
+#text {
+    margin-left: 8px;
+}

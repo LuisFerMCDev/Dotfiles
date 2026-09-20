@@ -1,0 +1,23 @@
+#!/bin/bash
+
+SIGNAL=$(nmcli -t -f IN-USE,SIGNAL dev wifi list | awk -F: '$1=="*"{print $2; exit}')
+SSID=$(nmcli -t -f IN-USE,SSID dev wifi list | awk -F: '$1=="*"{print $2; exit}')
+
+if [ -z "$SIGNAL" ]; then
+    CLASS="offline"
+    TOOLTIP="Wi-Fi desconectado"
+elif [ "$SIGNAL" -lt 25 ]; then
+    CLASS="weak"
+    TOOLTIP="$SSID\nSeñal: $SIGNAL%"
+elif [ "$SIGNAL" -lt 50 ]; then
+    CLASS="ok"
+    TOOLTIP="$SSID\nSeñal: $SIGNAL%"
+elif [ "$SIGNAL" -lt 75 ]; then
+    CLASS="good"
+    TOOLTIP="$SSID\nSeñal: $SIGNAL%"
+else
+    CLASS="excellent"
+    TOOLTIP="$SSID\nSeñal: $SIGNAL%"
+fi
+
+printf '{"text":"","tooltip":"%s","class":"%s"}\n' "$TOOLTIP" "$CLASS"

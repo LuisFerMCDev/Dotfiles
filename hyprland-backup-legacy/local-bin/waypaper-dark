@@ -1,0 +1,22 @@
+#!/bin/bash
+
+export GTK_THEME=Adwaita:dark
+export GDK_BACKEND=wayland
+
+OLD_PID=$(pgrep -o swaybg)
+
+waypaper &
+WAYPAPER_PID=$!
+
+while kill -0 "$WAYPAPER_PID" 2>/dev/null; do
+    NEW_PID=$(pgrep -o swaybg)
+
+    if [ "$NEW_PID" != "$OLD_PID" ] && [ -n "$NEW_PID" ]; then
+        sleep 0.5
+        kill "$WAYPAPER_PID" 2>/dev/null
+        notify-send "Wallpaper cambiado ✓" "El fondo de pantalla se ha aplicado correctamente."
+        exit 0
+    fi
+
+    sleep 0.5
+done

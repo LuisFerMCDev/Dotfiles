@@ -1,0 +1,73 @@
+# Noctalia Glass — config curada (capa base)
+# Esta capa vive en ~/.config/noctalia/ . Los cambios de la GUI van a
+# ~/.local/state/noctalia/settings.toml y tienen prioridad.
+# Para ver el resultado efectivo: noctalia config export | head
+
+[theme]
+mode = "dark"
+shell_mode = "dark"
+source = "community"
+builtin = "Noctalia"
+community_palette = "Oxocarbon"
+wallpaper_scheme = "vibrant"
+# Glass necesita translucidez: pure black la mata
+pure_black_dark = false
+
+  [theme.templates]
+  builtin_ids = ["gtk3", "gtk4", "kitty", "hyprland"]
+
+# Barra flotante translúcida estilo glass
+[bar.default]
+position = "top"
+thickness = 36
+background_opacity = 0.72
+radius = 12
+margin_ends = 12
+margin_edge = 8
+padding = 14
+widget_spacing = 6
+capsule = true
+capsule_opacity = 0.82
+shadow = true
+border_width = 1.0
+
+[bar]
+order = ["default"]
+
+# Paneles en modo glass
+[shell.panel]
+transparency_mode = "glass"
+borders = true
+shadow = true
+
+[shell]
+settings_window_translucent = true
+corner_radius_scale = 1.0
+
+  [shell.shadow]
+  alpha = 0.45
+  direction = "down"
+
+  [shell.animation]
+  enabled = true
+  speed = 1.0
+
+# Wallpaper: usa tu carpeta actual + transiciones suaves
+[wallpaper]
+enabled = true
+fill_mode = "crop"
+directory = "/home/luisfernando/Imágenes/Wallpapers"
+transition = ["fade", "wipe", "zoom"]
+transition_duration = 1500
+transition_on_startup = false
+
+  [wallpaper.automation]
+  enabled = false
+  interval_seconds = 1800
+  order = "random"
+
+# OSD translúcido a juego
+[osd]
+background_opacity = 0.88
+border = true
+scale = 1.0

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if pgrep -x waycal >/dev/null; then
+    pkill -x waycal
+else
+    /home/luisfernando/.cargo/bin/waycal &
+fi
+
+

@@ -1,0 +1,56 @@
+#!/bin/bash
+
+WOFI="wofi --dmenu --prompt='Wi-Fi' --width=420 --height=360 --location=top_right --y=55"
+
+NETWORKS=$(nmcli -t -f IN-USE,SSID,SIGNAL,SECURITY dev wifi list --rescan yes | \
+    awk -F: '
+    {
+        active = ($1 == "*") ? "● " : "  "
+        ssid = $2
+        signal = $3
+        security = $4
+
+        if (ssid != "") {
+            if (security != "")
+                security_icon="🔒"
+            else
+                security_icon="  "
+
+            printf "%s%s  %s%%  %s\n", active, ssid, signal, security_icon
+        }
+    }')
+
+[ -z "$NETWORKS" ] && exit 0
+
+SELECTED=$(printf '%s\n' "$NETWORKS" | $WOFI)
+
+[ -z "$SELECTED" ] && exit 0
+
+SSID=$(printf '%s\n' "$SELECTED" | sed -E 's/^● |^  //' | sed -E 's/  [0-9]+%  .*//')
+
+[ -z "$SSID" ] && exit 0
+
+if nmcli -t -f NAME connection show | grep -Fxq "$SSID"; then
+    nmcli connection up "$SSID"
+    exit 0
+fi
+
+SECURITY=$(nmcli -t -f SSID,SECURITY dev wifi list | \
+    awk -F: -v ssid="$SSID" '$1 == ssid {print $2; exit}')
+
+if [ -z "$SECURITY" ]; then
+    nmcli dev wifi connect "$SSID"
+else
+    PASSWORD=$(printf '' | wofi \
+        --dmenu \
+        --password \
+        --prompt="Contraseña Wi-Fi" \
+        --width=420 \
+        --height=80 \
+        --location=top_right \
+        --y=55)
+
+    [ -z "$PASSWORD" ] && exit 0
+
+    nmcli dev wifi connect "$SSID" password "$PASSWORD"
+fi

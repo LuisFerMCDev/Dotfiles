@@ -1,0 +1,58 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 30,
+
+    "modules-left": [
+        "hyprland/workspaces"
+    ],
+
+    "modules-center": [
+        "clock"
+    ],
+
+    "modules-right": [
+        "image#wifi",
+        "pulseaudio",
+        "battery"
+    ],
+
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        "on-click": "activate",
+        "sort-by-number": true,
+        "format-icons": {
+            "active": "●",
+            "default": "●",
+            "empty": "●",
+            "urgent": "●"
+        }
+    },
+
+    "clock": {
+        "format": "{:%H:%M  |  %d/%m/%Y}",
+        "tooltip": false,
+        "on-click": "/home/luisfernando/.local/bin/toggle-waycal"
+    },
+
+  "image#wifi": {
+    "exec": "/home/luisfernando/.local/bin/waybar-wifi-image",
+    "size": 18,
+    "interval": 5,
+    "tooltip": true,
+    "on-click": "/home/luisfernando/.local/bin/wifi-popup"
+},
+    "pulseaudio": {
+        "format": "Audio  {volume}%",
+        "format-muted": "Audio  Muted"
+    },
+
+    "battery": {
+        "format": "Batería  {capacity}%",
+        "format-charging": "Cargando  {capacity}%",
+        "states": {
+            "warning": 30,
+            "critical": 15
+        }
+    }
+}
