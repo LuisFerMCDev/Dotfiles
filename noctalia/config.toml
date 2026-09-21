@@ -19,6 +19,7 @@ pure_black_dark = false
 # Barra flotante translúcida estilo glass
 [bar.default]
 position = "top"
+center = ["weather", "clock"]
 thickness = 36
 background_opacity = 0.72
 radius = 12
@@ -71,3 +72,39 @@ transition_on_startup = false
 background_opacity = 0.88
 border = true
 scale = 1.0
+
+# Reloj central: solo hora (fecha en tooltip) + clima al lado
+[widget.clock]
+format = "{:%H:%M}"
+tooltip_format = "{:%A, %d %B %Y}"
+
+[widget.media]
+hide_when_no_media = true
+title_scroll = "on_hover"
+show_progress = true
+max_length = 220
+min_length = 80
+
+[widget.audio-vis]
+type = "audio_visualizer"
+width = 64
+bands = 20
+show_when_idle = false
+color_1 = "primary"
+color_2 = "secondary"
+
+[widget.sysmon-cpu]
+type = "sysmon"
+stat = "cpu_usage"
+visualization = "gauge"
+show_value = true
+
+[weather]
+enabled = true
+refresh_minutes = 30
+unit = "metric"
+
+[widget.weather]
+show_temperature = true
+show_condition = false
+max_length = 160
