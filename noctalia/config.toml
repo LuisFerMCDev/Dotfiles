@@ -81,7 +81,7 @@ tooltip_format = "{:%A, %d %B %Y}"
 [widget.media]
 hide_when_no_media = true
 title_scroll = "on_hover"
-show_progress = true
+show_progress = false
 max_length = 220
 min_length = 80
 
