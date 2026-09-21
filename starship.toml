@@ -1,0 +1,68 @@
+# Starship · prompt informativo dos líneas
+format = """$directory$git_branch$git_status$nodejs$python$golang$rust$docker_context$fill$cmd_duration$jobs
+$character"""
+
+right_format = "$time"
+
+[fill]
+symbol = " "
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+vimcmd_symbol = "[❮](bold green)"
+
+[directory]
+truncation_length = 3
+truncate_to_repo = true
+style = "bold cyan"
+read_only = " 🔒"
+read_only_style = "red"
+
+[git_branch]
+symbol = " "
+style = "bold purple"
+
+[git_status]
+ahead = "⇡${count}"
+behind = "⇣${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+modified = "!${count}"
+staged = "+${count}"
+untracked = "?${count}"
+style = "bold yellow"
+
+[nodejs]
+symbol = " "
+style = "bold green"
+
+[python]
+symbol = " "
+style = "bold yellow"
+
+[golang]
+symbol = " "
+style = "bold cyan"
+
+[rust]
+symbol = " "
+style = "bold red"
+
+[docker_context]
+symbol = " "
+style = "bold blue"
+
+[cmd_duration]
+min_time = 2000
+format = "⏱ [$duration]($style)"
+style = "bold yellow"
+
+[jobs]
+symbol = "✦"
+style = "bold blue"
+
+[time]
+disabled = false
+format = "[$time]($style)"
+time_format = "%H:%M"
+style = "dimmed white"
