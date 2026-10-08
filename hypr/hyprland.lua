@@ -392,7 +392,6 @@ local function zen_go(profile, class)
     hl.exec_cmd("flatpak run app.zen_browser.zen -P " .. profile .. " --name " .. class)
 end
 hl.bind(mainMod .. " + Z", function() zen_go("Personal", "Zen-Personal") end)
-hl.bind(mainMod .. " + SHIFT + Z", function() zen_go("Pro", "Zen-Pro") end)
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
 --------------------------------
@@ -501,12 +500,19 @@ hl.window_rule({
     center = true,
 })
 
+-- Kitty: sin decoración en Hyprland (en GNOME la pone kitty.conf)
+hl.window_rule({
+    name  = "kitty-no-decor",
+    match = { class = "^(kitty|Kitty)$" },
+    decorate = false,
+})
+
 -- Zen: mantener transparencia real (alpha) también en inactivo
 -- No bajar opacity: el mod TransparentZen usa alpha por píxel, no opacity global.
 -- El gris al perder foco lo pone Zen (zen.view.grey-out-inactive-windows), ver about:config.
 hl.window_rule({
     name = "zen-keep-transparency",
-    match = { class = "(app.zen_browser.zen|Zen-Personal|Zen-Pro)" },
+    match = { class = "(app.zen_browser.zen|Zen-Personal)" },
     opacity = "1.0 override 1.0 override",
     opaque = false,
     no_blur = false,
