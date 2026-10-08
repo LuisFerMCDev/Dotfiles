@@ -1,5 +1,5 @@
-# Starship · prompt informativo dos líneas
-format = """$directory$git_branch$git_status$nodejs$python$golang$rust$docker_context$fill$cmd_duration$jobs
+# Starship · Catppuccin Mocha dos líneas (coherente con Noctalia + Hyprland)
+format = """$os$directory$git_branch$git_status$git_metrics$nodejs$python$golang$rust$docker_context$nix_shell$fill$cmd_duration$jobs
 $character"""
 
 right_format = "$time"
@@ -8,19 +8,24 @@ right_format = "$time"
 symbol = " "
 
 [character]
-success_symbol = "[❯](bold green)"
+success_symbol = "[❯](bold blue)"
 error_symbol = "[❯](bold red)"
-vimcmd_symbol = "[❮](bold green)"
+vimcmd_symbol = "[❮](bold blue)"
+
+[os]
+disabled = false
+style = "bold white"
+symbols = { Linux = " ", Fedora = " " }
 
 [directory]
 truncation_length = 3
 truncate_to_repo = true
-style = "bold cyan"
+style = "bold blue"
 read_only = " 🔒"
 read_only_style = "red"
 
 [git_branch]
-symbol = " "
+symbol = "  "
 style = "bold purple"
 
 [git_status]
@@ -31,6 +36,12 @@ modified = "!${count}"
 staged = "+${count}"
 untracked = "?${count}"
 style = "bold yellow"
+
+[git_metrics]
+disabled = false
+added_style = "bold green"
+deleted_style = "bold red"
+format = "[+$added]($added_style)/[-$deleted]($deleted_style) "
 
 [nodejs]
 symbol = " "
@@ -50,6 +61,11 @@ style = "bold red"
 
 [docker_context]
 symbol = " "
+style = "bold blue"
+
+[nix_shell]
+disabled = false
+symbol = "❄ "
 style = "bold blue"
 
 [cmd_duration]

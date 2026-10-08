@@ -53,6 +53,9 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("noctalia")
     hl.exec_cmd("pidof hypridle || hypridle")
     hl.exec_cmd("pidof hyprpolkitagent || hyprpolkitagent")
+    -- Fondo ESTÁTICO por defecto. Para volver al animado al iniciar sesión,
+    -- descomenta la siguiente línea (o pulsa Super+T en cualquier momento):
+    -- hl.exec_cmd("pidof livepaper || /home/luisfernando/.local/bin/livepaper --restore")
 end)
 -------------------------------
 ---- ENVIRONMENT VARIABLES ----
@@ -62,6 +65,9 @@ end)
 
 hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_SIZE", "24")
+-- Hyprland arranca con PATH=/usr/local/bin:/usr/bin; sin ~/.local/bin no
+-- encuentra livepaper y todos los binds mueren en silencio
+hl.env("PATH", "/home/luisfernando/.local/bin:/usr/local/bin:/usr/bin")
 
 
 -----------------------
@@ -90,14 +96,15 @@ hl.env("HYPRCURSOR_SIZE", "24")
 -- Refer to https://wiki.hypr.land/Configuring/Basics/Variables/
 hl.config({
     general = {
-        gaps_in  = 5,
-        gaps_out = 20,
+        gaps_in  = 6,
+        -- CSS-style: más aire arriba para la barra flotante, compacto en el resto
+        gaps_out = { top = 30, right = 14, bottom = 0, left = 14 },
 
         border_size = 2,
 
         col = {
-            active_border   = { colors = {"rgba(33ccffee)", "rgba(00ff99ee)"}, angle = 45 },
-            inactive_border = "rgba(595959aa)",
+            active_border   = { colors = {"rgba(89b4faee)", "rgba(b4befeee)"}, angle = 45 },
+            inactive_border = "rgba(2e3440aa)",
         },
 
         -- Set to true to enable resizing windows by clicking and dragging on borders and gaps
@@ -110,25 +117,35 @@ hl.config({
     },
 
     decoration = {
-    rounding       = 14,
+    rounding       = 12,
     rounding_power = 2,
 
     -- Ventanas opacas (sin transparencia en las apps; el blur sigue en Noctalia)
     active_opacity   = 1.0,
     inactive_opacity = 1.0,
+    fullscreen_opacity = 1.0,
+
+    dim_inactive = false,
 
     shadow = {
         enabled      = true,
-        range        = 12,
-        render_power = 3,
-        color        = 0xee1a1a1a,
+        range        = 30,
+        render_power = 4,
+        scale        = 1.0,
+        color        = 0xaa000000,
+        color_inactive = 0x77000000,
     },
 
     blur = {
         enabled   = true,
-        size      = 5,
+        size      = 8,
         passes    = 2,
-        vibrancy  = 0.30,
+        vibrancy  = 0.40,
+        vibrancy_darkness = 0.5,
+        ignore_opacity = true,
+        new_optimizations = true,
+        xray      = true,
+        popups    = true,
     },
 },
 
@@ -151,7 +168,7 @@ hl.animation({ leaf = "global",        enabled = true,  speed = 10,   bezier = "
 hl.animation({ leaf = "border",        enabled = true,  speed = 5.39, bezier = "easeOutQuint" })
 hl.animation({ leaf = "windows",       enabled = true,  speed = 4.79, spring = "easy" })
 hl.animation({ leaf = "windowsIn",     enabled = true,  speed = 4.1,  spring = "easy",         style = "popin 87%" })
-hl.animation({ leaf = "windowsOut",    enabled = true,  speed = 1.49, bezier = "linear",       style = "popin 87%" })
+hl.animation({ leaf = "windowsOut",    enabled = true,  speed = 4.5,  bezier = "easeOutQuint",    style = "popin 85%" })
 hl.animation({ leaf = "fadeIn",        enabled = true,  speed = 1.73, bezier = "almostLinear" })
 hl.animation({ leaf = "fadeOut",       enabled = true,  speed = 1.46, bezier = "almostLinear" })
 hl.animation({ leaf = "fade",          enabled = true,  speed = 3.03, bezier = "quick" })
@@ -160,9 +177,9 @@ hl.animation({ leaf = "layersIn",      enabled = true,  speed = 4,    bezier = "
 hl.animation({ leaf = "layersOut",     enabled = true,  speed = 1.5,  bezier = "linear",       style = "fade" })
 hl.animation({ leaf = "fadeLayersIn",  enabled = true,  speed = 1.79, bezier = "almostLinear" })
 hl.animation({ leaf = "fadeLayersOut", enabled = true,  speed = 1.39, bezier = "almostLinear" })
-hl.animation({ leaf = "workspaces",    enabled = true,  speed = 1.94, bezier = "almostLinear", style = "fade" })
-hl.animation({ leaf = "workspacesIn",  enabled = true,  speed = 1.21, bezier = "almostLinear", style = "fade" })
-hl.animation({ leaf = "workspacesOut", enabled = true,  speed = 1.94, bezier = "almostLinear", style = "fade" })
+hl.animation({ leaf = "workspaces",    enabled = true,  speed = 3.2,  bezier = "easeOutQuint", style = "slidefadevert" })
+hl.animation({ leaf = "workspacesIn",  enabled = true,  speed = 3.2,  bezier = "easeOutQuint", style = "slidefadevert" })
+hl.animation({ leaf = "workspacesOut", enabled = true,  speed = 3.2,  bezier = "easeOutQuint", style = "slidefadevert" })
 hl.animation({ leaf = "zoomFactor",    enabled = true,  speed = 7,    bezier = "quick" })
 
 -- Ref https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
@@ -210,8 +227,15 @@ hl.config({
 
 hl.config({
     misc = {
-        force_default_wallpaper = -1,    -- Set to 0 or 1 to disable the anime mascot wallpapers
-        disable_hyprland_logo   = false, -- If true disables the random hyprland logo / anime girl background. :(
+        force_default_wallpaper = 0,     -- 0: Noctalia pone el fondo, sin anime default
+        disable_hyprland_logo   = true,  -- rice limpio
+        vrr = 0,
+        focus_on_activate = true,
+        middle_click_paste = false,
+        allow_session_lock_restore = true,
+        background_color = 0xff111418,   -- GamerCyan surface (ARGB entero, como shadow.color)
+        enable_swallow = false,
+        swallow_regex = "",
     },
 })
 
@@ -296,7 +320,10 @@ hl.bind(mainMod .. " + S",         hl.dsp.workspace.toggle_special("magic"))
 local ipc = "noctalia msg "
 hl.bind(mainMod .. " + Space", hl.dsp.exec_cmd(ipc .. "panel-toggle launcher"))
 hl.bind(mainMod .. " + A", hl.dsp.exec_cmd(ipc .. "panel-toggle control-center"))
-hl.bind(mainMod .. " + W", hl.dsp.exec_cmd(ipc .. "panel-toggle wallpaper"))
+-- HyprQuickPaper: selector visual de wallpapers (SUPER+W) y layouts (SHIFT+W)
+hl.bind(mainMod .. " + W", hl.dsp.exec_cmd("hqp"))
+hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("hqp settings"))
+hl.bind(mainMod .. " + CTRL + W", hl.dsp.exec_cmd(ipc .. "wallpaper-random"))
 hl.bind(mainMod .. " + comma", hl.dsp.exec_cmd(ipc .. "settings-toggle"))
 hl.bind("ALT + Tab", hl.dsp.exec_cmd(ipc .. "window-switcher"))
 
@@ -327,6 +354,45 @@ hl.bind(
     mainMod .. " + SHIFT + S",
     hl.dsp.exec_cmd("noctalia msg screenshot-region")
 )
+-- Capturas extra: Print = monitor actual, Alt+Print = anotar
+hl.bind("Print", hl.dsp.exec_cmd("noctalia msg screenshot-fullscreen"))
+hl.bind("ALT + Print", hl.dsp.exec_cmd("noctalia msg screenshot-annotate"))
+
+-- Plus visual: wallpaper random (movido a CTRL+W por HyprQuickPaper), nightlight, caffeine
+hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd(ipc .. "nightlight-toggle"))
+hl.bind(mainMod .. " + SHIFT + I", hl.dsp.exec_cmd(ipc .. "caffeine-toggle"))
+
+-- Gestión ventanas plus: fullscreen, pin, grupos
+hl.bind(mainMod .. " + X", hl.dsp.exec_cmd("hyprctl dispatch fullscreen 0"))
+hl.bind(mainMod .. " + SHIFT + X", hl.dsp.exec_cmd("hyprctl dispatch fullscreen 1"))
+hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd("hyprctl dispatch pin"))
+hl.bind(mainMod .. " + H", hl.dsp.exec_cmd("hyprctl dispatch togglegroup"))
+hl.bind(mainMod .. " + TAB", hl.dsp.exec_cmd("hyprctl dispatch changegroupactive f"))
+hl.bind(mainMod .. " + SHIFT + H", hl.dsp.exec_cmd("hyprctl dispatch moveoutofgroup"))
+
+-- Fondos: picker visual con SUPER+W (estáticos + animados), N/B/G para estáticos vía Noctalia
+hl.bind(mainMod .. " + N",           hl.dsp.exec_cmd(ipc .. "wallpaper-next"))
+hl.bind(mainMod .. " + B",           hl.dsp.exec_cmd(ipc .. "wallpaper-previous"))
+hl.bind(mainMod .. " + G",           hl.dsp.exec_cmd(ipc .. "wallpaper-random"))
+
+-- Zen: un atajo por perfil, resuelto EN PROCESO (sin spawnear nada).
+-- Enfoca directo si existe; si no, lanza ese perfil. Anti-doble-pulsación 20s.
+local zen_launch_at = {}
+local function zen_go(profile, class)
+    local wins = hl.get_windows({ class = class })
+    if wins ~= nil and #wins > 0 then
+        hl.dispatch(hl.dsp.focus({ window = wins[1] }))
+        return
+    end
+    local now = os.time()
+    if zen_launch_at[class] ~= nil and now - zen_launch_at[class] < 20 then
+        return
+    end
+    zen_launch_at[class] = now
+    hl.exec_cmd("flatpak run app.zen_browser.zen -P " .. profile .. " --name " .. class)
+end
+hl.bind(mainMod .. " + Z", function() zen_go("Personal", "Zen-Personal") end)
+hl.bind(mainMod .. " + SHIFT + Z", function() zen_go("Pro", "Zen-Pro") end)
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
 --------------------------------
@@ -368,12 +434,11 @@ hl.window_rule({
 -- })
 -- overlayLayerRule:set_enabled(false)
 
--- Noctalia crisp gaps: quita el blur en los huecos transparentes de la barra
--- y el escarchado de los paneles (bar ignore_alpha 0.0, paneles 1.0)
+-- Barra Noctalia transparente: sin blur detrás (el fondo lo da el wallpaper)
 hl.layer_rule({
     name  = "noctalia-bar-crisp-gaps",
     match = { namespace = "^noctalia-bar-default$" },
-    blur = true,
+    blur = false,
     ignore_alpha = 0.0,
 })
 hl.layer_rule({
@@ -398,6 +463,53 @@ hl.window_rule({
 
     move  = "20 monitor_h-120",
     float = true,
+})
+
+-- Plus: diálogos y utilidades flotantes centradas (no tapan el tiling)
+for _, cls in ipairs({
+    "org.gnome.NautilusPreviewer",
+    "org.gnome.FileRoller",
+    "org.gnome.Loupe",
+    "org.gnome.Calculator",
+    "pavucontrol",
+    "blueman-manager",
+    "nm-connection-editor",
+    "xdg-desktop-portal-gtk",
+    "hyprpolkitagent",
+}) do
+    hl.window_rule({
+        name  = "float-" .. cls,
+        match = { class = cls },
+        float = true,
+        center = true,
+        size = { 1200, 800 },
+    })
+end
+-- Nautilus principal: flotante grande centrado (SUPER+E)
+hl.window_rule({
+    name  = "float-nautilus",
+    match = { class = "org.gnome.Nautilus" },
+    float = true,
+    center = true,
+    size = { 1500, 900 },
+})
+-- Steam / diálogos pequeños
+hl.window_rule({
+    name  = "float-dialogs",
+    match = { title = "^(Open|Save|Save As|Choose|Select).*$" },
+    float = true,
+    center = true,
+})
+
+-- Zen: mantener transparencia real (alpha) también en inactivo
+-- No bajar opacity: el mod TransparentZen usa alpha por píxel, no opacity global.
+-- El gris al perder foco lo pone Zen (zen.view.grey-out-inactive-windows), ver about:config.
+hl.window_rule({
+    name = "zen-keep-transparency",
+    match = { class = "(app.zen_browser.zen|Zen-Personal|Zen-Pro)" },
+    opacity = "1.0 override 1.0 override",
+    opaque = false,
+    no_blur = false,
 })
 
 -- For Noctalia Color templates

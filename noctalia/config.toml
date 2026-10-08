@@ -6,9 +6,10 @@
 [theme]
 mode = "dark"
 shell_mode = "dark"
-source = "community"
+source = "custom"
 builtin = "Noctalia"
 community_palette = "Oxocarbon"
+custom_palette = "GamerCyan"
 wallpaper_scheme = "vibrant"
 # Glass necesita translucidez: pure black la mata
 pure_black_dark = false
@@ -16,28 +17,30 @@ pure_black_dark = false
   [theme.templates]
   builtin_ids = ["gtk3", "gtk4", "kitty", "hyprland"]
 
-# Barra flotante translúcida estilo glass
+# Barra flotante SIN fondo ni borde (transparente total)
 [bar.default]
-position = "top"
-center = ["weather", "clock"]
-thickness = 36
-background_opacity = 0.72
-radius = 12
+position = "left"
+start = ["launcher", "workspaces"]
+center = ["weather", "clock", "media"]
+end = ["tray", "audio-vis", "group:g1", "group:g2", "session"]
+thickness = 38
+background_opacity = 0.0
+radius = 14
 margin_ends = 12
 margin_edge = 8
 padding = 14
 widget_spacing = 6
 capsule = true
-capsule_opacity = 0.82
-shadow = true
-border_width = 1.0
+capsule_opacity = 0.55
+shadow = false
+border_width = 0.0
 
 [bar]
 order = ["default"]
 
-# Paneles en modo glass
+# Paneles sólidos (legibilidad: el glass perdía las letras)
 [shell.panel]
-transparency_mode = "glass"
+transparency_mode = "solid"
 borders = true
 shadow = true
 
@@ -81,7 +84,7 @@ tooltip_format = "{:%A, %d %B %Y}"
 [widget.media]
 hide_when_no_media = true
 title_scroll = "on_hover"
-show_progress = false
+show_progress = true
 max_length = 220
 min_length = 80
 
@@ -108,3 +111,23 @@ unit = "metric"
 show_temperature = true
 show_condition = false
 max_length = 160
+
+# Workspaces: foco azul Catppuccin, resto tenue, urgente rojo
+[widget.workspaces]
+capsule = false
+change_color_on_hover = true
+color = "#6c7086"
+focused_color = "#89b4fa"
+urgent_color = "#f38ba8"
+
+# Launcher compacto a juego con la barra
+[widget.launcher]
+show_labels = false
+icon_size = 20
+
+# Dock inferior: desactivado (reservaba 76px y encogía las ventanas)
+[dock]
+enabled = false
+position = "bottom"
+auto_hide = true
+background_opacity = 0.55

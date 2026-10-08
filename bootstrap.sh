@@ -14,7 +14,11 @@ echo "==> Backup previo en: $BACKUP"
 if command -v dnf >/dev/null; then
   sudo dnf install -y \
     hyprland noctalia kitty starship git gh \
-    fzf ripgrep fd-find eza zoxide neovim
+    fzf ripgrep fd-find eza zoxide neovim \
+    jq ImageMagick ffmpeg mpvpaper
+  # Quickshell (motor de HyprQuickPaper) solo está en COPR
+  sudo dnf copr enable -y errornointernet/quickshell
+  sudo dnf install -y quickshell
   sudo dnf install -y uv || (curl -LsSf astral.sh/uv/install.sh | sh)
 else
   echo "!! Sin dnf: instala manual hyprland noctalia kitty starship git gh fzf ripgrep fd eza zoxide neovim uv"
@@ -38,6 +42,25 @@ link_path "hypr" "$HOME/.config/hypr"
 link_path "noctalia" "$HOME/.config/noctalia"
 link_path "kitty/kitty.conf" "$HOME/.config/kitty/kitty.conf"
 link_path "starship.toml" "$HOME/.config/starship.toml"
+link_path "bin/hqp" "$HOME/.local/bin/hqp"
+link_path "bin/wall-toggle" "$HOME/.local/bin/wall-toggle"
+
+# 2b. HyprQuickPaper (selector visual de wallpapers, estáticos + video)
+HQ="$HOME/.config/quickshell/hyprquickpaper"
+if [ ! -d "$HQ" ]; then
+  echo "  clone: hyprquickpaper"
+  mkdir -p "$HOME/.config/quickshell"
+  git clone https://github.com/ujjalsigdel/hyprquickpaper.git "$HQ"
+else
+  echo "  hyprquickpaper: ya existe, no toco"
+fi
+echo "  config: hyprquickpaper config.json + enlaces layouts/"
+cp "$REPO/quickshell/hyprquickpaper-config.json" "$HQ/config.json"
+for f in config.json cache.sh commands.sh common.sh assets; do
+  [ -e "$HQ/layouts/$f" ] || ln -s "../$f" "$HQ/layouts/$f"
+done
+mkdir -p ~/.cache/hyprquickpaper
+[ -f ~/.cache/hyprquickpaper/current_wallpaper ] || touch ~/.cache/hyprquickpaper/current_wallpaper
 
 # 3. Bloque dev-tools en .bashrc (solo si falta)
 if ! grep -q "Dev tools (opencode setup)" "$HOME/.bashrc" 2>/dev/null; then

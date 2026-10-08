@@ -1,0 +1,8 @@
+#!/bin/bash
+# Lanza HyprQuickPaper respetando el layout elegido en config.json
+HQ="$HOME/.config/quickshell/hyprquickpaper"
+LAYOUT=$(jq -r '.active_layout // "layouts/shell-coverflow.qml"' "$HQ/config.json")
+case "$1" in
+  settings) exec qs -p "$HQ/settings.qml" ;;
+  *) exec qs -p "$HQ/$LAYOUT" ;;
+esac

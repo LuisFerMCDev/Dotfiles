@@ -1,0 +1,20 @@
+#!/bin/bash
+# Alterna entre wallpaper estático (Noctalia) y animado (mpvpaper).
+# Sin args: si hay video sonando lo apaga (vuelve al estático),
+# si no, reproduce el último video usado (o el Anime Girl por defecto).
+HQ="$HOME/.config/quickshell/hyprquickpaper"
+WPDIR="$HOME/Imágenes/Wallpapers"
+DEFAULT_VIDEO="$WPDIR/Anime Girl Cold Gaze Live Wallpaper.mp4"
+
+if pgrep -x mpvpaper >/dev/null; then
+    pkill mpvpaper
+    noctalia msg notification-show "Wallpaper" "Modo estático" >/dev/null 2>&1
+else
+    VID=""
+    CUR="$(cat $HOME/.cache/hyprquickpaper/current_wallpaper 2>/dev/null)"
+    case "$CUR" in
+      *.mp4|*.webm|*.mov|*.mkv|*.avi) [ -f "$CUR" ] && VID="$CUR" ;;
+    esac
+    [ -z "$VID" ] && VID="$DEFAULT_VIDEO"
+    bash "$HQ/commands.sh" "$VID"
+fi
