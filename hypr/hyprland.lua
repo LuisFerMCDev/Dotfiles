@@ -500,13 +500,6 @@ hl.window_rule({
     center = true,
 })
 
--- Kitty: sin decoración en Hyprland (en GNOME la pone kitty.conf)
-hl.window_rule({
-    name  = "kitty-no-decor",
-    match = { class = "^(kitty|Kitty)$" },
-    decorate = false,
-})
-
 -- Zen: mantener transparencia real (alpha) también en inactivo
 -- No bajar opacity: el mod TransparentZen usa alpha por píxel, no opacity global.
 -- El gris al perder foco lo pone Zen (zen.view.grey-out-inactive-windows), ver about:config.
