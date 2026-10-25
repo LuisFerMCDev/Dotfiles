@@ -69,7 +69,8 @@
     {
       "type": "gpu",
       "key": "󰢮 GPU",
-      "keyColor": "yellow"
+      "keyColor": "yellow",
+      "format": "AMD Radeon Vega 8 (iGPU)"
     },
     {
       "type": "memory",
