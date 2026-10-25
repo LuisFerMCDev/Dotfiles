@@ -398,7 +398,7 @@ hl.bind(mainMod .. " + B",           hl.dsp.exec_cmd(ipc .. "wallpaper-previous"
 hl.bind(mainMod .. " + G",           hl.dsp.exec_cmd(ipc .. "wallpaper-random"))
 
 -- Zen Browser
-hl.bind(mainMod .. " + Z", hl.dsp.exec_cmd("command -v zen-browser >/dev/null 2>&1 && zen-browser -P Personal || flatpak run app.zen_browser.zen -P Personal"))
+hl.bind(mainMod .. " + Z", hl.dsp.exec_cmd("zen-browser"))
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
 --------------------------------
@@ -519,7 +519,7 @@ hl.window_rule({
 -- El gris al perder foco lo pone Zen (zen.view.grey-out-inactive-windows), ver about:config.
 hl.window_rule({
     name = "zen-keep-transparency",
-    match = { class = "(app.zen_browser.zen|Zen-Personal|zen)" },
+    match = { class = "^(zen|app\\.zen_browser\\.zen)$" },
     opacity = "1.0 override 1.0 override",
     opaque = false,
     no_blur = false,
