@@ -397,27 +397,8 @@ hl.bind(mainMod .. " + N",           hl.dsp.exec_cmd(ipc .. "wallpaper-next"))
 hl.bind(mainMod .. " + B",           hl.dsp.exec_cmd(ipc .. "wallpaper-previous"))
 hl.bind(mainMod .. " + G",           hl.dsp.exec_cmd(ipc .. "wallpaper-random"))
 
--- Zen: un atajo por perfil, resuelto EN PROCESO (sin spawnear nada).
--- Enfoca directo si existe; si no, lanza ese perfil. Anti-doble-pulsación 20s.
-local zen_launch_at = {}
-local function zen_go(profile, class)
-    local wins = hl.get_windows({ class = class })
-    if wins ~= nil and #wins > 0 then
-        hl.dispatch(hl.dsp.focus({ window = wins[1] }))
-        return
-    end
-    local now = os.time()
-    if zen_launch_at[class] ~= nil and now - zen_launch_at[class] < 20 then
-        return
-    end
-    zen_launch_at[class] = now
-    if os.execute("command -v zen-browser >/dev/null 2>&1") == 0 then
-        hl.exec_cmd("zen-browser -P " .. profile .. " --name " .. class)
-    else
-        hl.exec_cmd("flatpak run app.zen_browser.zen -P " .. profile .. " --name " .. class)
-    end
-end
-hl.bind(mainMod .. " + Z", function() zen_go("Personal", "Zen-Personal") end)
+-- Zen Browser
+hl.bind(mainMod .. " + Z", hl.dsp.exec_cmd("command -v zen-browser >/dev/null 2>&1 && zen-browser -P Personal || flatpak run app.zen_browser.zen -P Personal"))
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
 --------------------------------
@@ -538,7 +519,7 @@ hl.window_rule({
 -- El gris al perder foco lo pone Zen (zen.view.grey-out-inactive-windows), ver about:config.
 hl.window_rule({
     name = "zen-keep-transparency",
-    match = { class = "(app.zen_browser.zen|Zen-Personal)" },
+    match = { class = "(app.zen_browser.zen|Zen-Personal|zen)" },
     opacity = "1.0 override 1.0 override",
     opaque = false,
     no_blur = false,
