@@ -1,0 +1,47 @@
+#!/usr/bin/env python3
+import subprocess, re, sys
+
+def get_sinks():
+    out = subprocess.run(["wpctl", "status"], capture_output=True, text=True).stdout
+    sinks = []
+    in_sinks = False
+    for line in out.splitlines():
+        if "Sinks:" in line:
+            in_sinks = True
+            continue
+        if in_sinks:
+            if "Sources:" in line:
+                break
+            m = re.search(r"(\*?)\s+(\d+)\.\s+(.*?)\s+\[vol:", line)
+            if m:
+                is_active = (m.group(1) == "*")
+                sid = m.group(2)
+                name = m.group(3).strip()
+                sinks.append({"id": sid, "name": name, "active": is_active})
+    return sinks
+
+def main():
+    sinks = get_sinks()
+    if not sinks:
+        sys.exit(0)
+    
+    # Filtrar solo salidas relevantes (Bluetooth y Altavoces de placa)
+    # Si no coinciden con los nombres específicos, ciclar entre todos los disponibles
+    preferred = [s for s in sinks if "HDMI" not in s["name"]]
+    if len(preferred) < 2:
+        preferred = sinks
+
+    active_idx = 0
+    for idx, s in enumerate(preferred):
+        if s["active"]:
+            active_idx = idx
+            break
+
+    next_sink = preferred[(active_idx + 1) % len(preferred)]
+    subprocess.run(["wpctl", "set-default", next_sink["id"]])
+    
+    clean_name = next_sink["name"].replace("Ryzen HD Audio Controller", "").strip()
+    subprocess.run(["noctalia", "msg", "notification-show", "Audio", f"Salida: {clean_name}"], capture_output=True)
+
+if __name__ == "__main__":
+    main()

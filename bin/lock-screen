@@ -1,0 +1,4 @@
+#!/bin/bash
+# Asegura wallpaper activo antes de levantar hyprlock
+"$HOME/.local/bin/sync-wallpaper-hook" 2>/dev/null
+exec hyprlock "$@"

@@ -19,16 +19,16 @@ pure_black_dark = false
 
 # Barra flotante SIN fondo ni borde (transparente total)
 [bar.default]
-position = "left"
-start = ["launcher", "workspaces"]
-center = ["weather", "clock", "media"]
-end = ["tray", "audio-vis", "group:g1", "group:g2", "session"]
-thickness = 38
+position = "top"
+start = ["workspaces"]
+center = ["clock"]
+end = ["audio-vis", "tray", "volume", "clipboard", "control-center"]
+thickness = 40
 background_opacity = 0.0
 radius = 14
 margin_ends = 12
 margin_edge = 8
-padding = 14
+padding = 10
 widget_spacing = 6
 capsule = true
 capsule_opacity = 0.55
@@ -76,17 +76,18 @@ background_opacity = 0.88
 border = true
 scale = 1.0
 
-# Reloj central: solo hora (fecha en tooltip) + clima al lado
+# Reloj central: solo hora 12h con AM/PM
 [widget.clock]
-format = "{:%H:%M}"
+format = "{:%I:%M %p}"
 tooltip_format = "{:%A, %d %B %Y}"
 
 [widget.media]
 hide_when_no_media = true
 title_scroll = "on_hover"
-show_progress = true
 max_length = 220
 min_length = 80
+art_size = 28
+rotate_album_art = false
 
 [widget.audio-vis]
 type = "audio_visualizer"
@@ -120,10 +121,11 @@ color = "#6c7086"
 focused_color = "#89b4fa"
 urgent_color = "#f38ba8"
 
-# Launcher compacto a juego con la barra
+# Launcher: layout-grid (4 paneles geométricos)
 [widget.launcher]
-show_labels = false
-icon_size = 20
+glyph = "layout-grid"
+custom_image = ""
+custom_image_colorize = false
 
 # Dock inferior: desactivado (reservaba 76px y encogía las ventanas)
 [dock]

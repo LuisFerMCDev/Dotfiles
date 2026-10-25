@@ -1,0 +1,15 @@
+#!/bin/bash
+# Sincroniza el wallpaper activo desde Noctalia o HyprQuickPaper hacia ~/.cache/current_wallpaper
+WP="$(noctalia msg wallpaper-get 2>/dev/null)"
+if [ -z "$WP" ] || [ ! -f "$WP" ]; then
+    WP="$(cat "$HOME/.cache/hyprquickpaper/current_wallpaper" 2>/dev/null)"
+fi
+# Fallback si no se encontró
+if [ -z "$WP" ] || [ ! -f "$WP" ]; then
+    WP="$HOME/Imágenes/Wallpapers/your_name_3840x2160.jpg"
+fi
+
+if [ -f "$WP" ]; then
+    mkdir -p "$HOME/.cache"
+    ln -sf "$WP" "$HOME/.cache/current_wallpaper"
+fi

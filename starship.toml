@@ -44,23 +44,23 @@ deleted_style = "bold red"
 format = "[+$added]($added_style)/[-$deleted]($deleted_style) "
 
 [nodejs]
-symbol = " "
+symbol = "󰌞 "
 style = "bold green"
 
 [python]
-symbol = " "
+symbol = " "
 style = "bold yellow"
 
 [golang]
-symbol = " "
+symbol = " "
 style = "bold cyan"
 
 [rust]
-symbol = " "
+symbol = "󱘗 "
 style = "bold red"
 
 [docker_context]
-symbol = " "
+symbol = "󰡨 "
 style = "bold blue"
 
 [nix_shell]

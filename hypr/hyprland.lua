@@ -21,6 +21,13 @@
 
 -- See https://wiki.hypr.land/Configuring/Basics/Monitors/
 hl.monitor({
+    output   = "HDMI-A-1",
+    mode     = "1920x1080@75",
+    position = "0x0",
+    scale    = "1",
+})
+
+hl.monitor({
     output   = "",
     mode     = "preferred",
     position = "auto",
@@ -51,6 +58,7 @@ local menu        = "noctalia msg panel-toggle launcher"
 -- end)
 hl.on("hyprland.start", function()
     hl.exec_cmd("noctalia")
+    hl.exec_cmd("/home/luisfernando/.local/bin/sync-wallpaper-hook")
     hl.exec_cmd("pidof hypridle || hypridle")
     hl.exec_cmd("pidof hyprpolkitagent || hyprpolkitagent")
     -- Fondo ESTÁTICO por defecto. Para volver al animado al iniciar sesión,
@@ -65,6 +73,8 @@ end)
 
 hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_SIZE", "24")
+hl.env("XCURSOR_THEME", "Bibata-Modern-Classic")
+hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Classic")
 -- Hyprland arranca con PATH=/usr/local/bin:/usr/bin; sin ~/.local/bin no
 -- encuentra livepaper y todos los binds mueren en silencio
 hl.env("PATH", "/home/luisfernando/.local/bin:/usr/local/bin:/usr/bin")
@@ -97,8 +107,8 @@ hl.env("PATH", "/home/luisfernando/.local/bin:/usr/local/bin:/usr/bin")
 hl.config({
     general = {
         gaps_in  = 6,
-        -- CSS-style: más aire arriba para la barra flotante, compacto en el resto
-        gaps_out = { top = 30, right = 14, bottom = 0, left = 14 },
+        -- Márgenes simétricos adaptados a la barra superior flotante de Noctalia (40px)
+        gaps_out = { top = 12, right = 14, bottom = 14, left = 14 },
 
         border_size = 2,
 
@@ -125,7 +135,8 @@ hl.config({
     inactive_opacity = 1.0,
     fullscreen_opacity = 1.0,
 
-    dim_inactive = false,
+    dim_inactive = true,
+    dim_strength = 0.08,
 
     shadow = {
         enabled      = true,
@@ -288,7 +299,7 @@ local closeWindowBind = hl.bind(mainMod .. " + C", hl.dsp.window.close())
 -- closeWindowBind:set_enabled(false)
 hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
-hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("pidof hyprlock || hyprlock"))
+hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("pidof hyprlock || /home/luisfernando/.local/bin/lock-screen"))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
@@ -298,6 +309,11 @@ hl.bind(mainMod .. " + D", hl.dsp.layout("move -col"))
 hl.bind(mainMod .. " + F", hl.dsp.layout("move +col"))
 hl.bind(mainMod .. " + SHIFT + D", hl.dsp.layout("swapcol l"))
 hl.bind(mainMod .. " + SHIFT + F", hl.dsp.layout("swapcol r"))
+-- Redimensionar ancho de columna con teclado
+hl.bind(mainMod .. " + ALT + right", hl.dsp.layout("colresize +0.1"))
+hl.bind(mainMod .. " + ALT + left",  hl.dsp.layout("colresize -0.1"))
+hl.bind(mainMod .. " + ALT + equal", hl.dsp.layout("colresize +0.1"))
+hl.bind(mainMod .. " + ALT + minus", hl.dsp.layout("colresize -0.1"))
 
 -- Move focus with mainMod + arrow keys
 hl.bind(mainMod .. " + left",  hl.dsp.focus({ direction = "left" }))
@@ -313,8 +329,9 @@ for i = 1, 10 do
     hl.bind(mainMod .. " + SHIFT + " .. key,     hl.dsp.window.move({ workspace = i }))
 end
 
--- Example special workspace (scratchpad)
-hl.bind(mainMod .. " + S",         hl.dsp.workspace.toggle_special("magic"))
+-- Scratchpad (workspace especial magic: SUPER+S para ver/ocultar, SUPER+SHIFT+Enter para abrir terminal)
+hl.bind(mainMod .. " + S",             hl.dsp.workspace.toggle_special("magic"))
+hl.bind(mainMod .. " + SHIFT + Return", hl.dsp.exec_cmd("kitty --class kitty-scratchpad"))
 
 -- Noctalia Glass: atajos recomendados oficiales
 local ipc = "noctalia msg "
@@ -362,12 +379,14 @@ hl.bind("ALT + Print", hl.dsp.exec_cmd("noctalia msg screenshot-annotate"))
 hl.bind(mainMod .. " + SHIFT + N", hl.dsp.exec_cmd(ipc .. "nightlight-toggle"))
 hl.bind(mainMod .. " + SHIFT + I", hl.dsp.exec_cmd(ipc .. "caffeine-toggle"))
 
--- Gestión ventanas plus: fullscreen, pin, grupos
-hl.bind(mainMod .. " + X", hl.dsp.exec_cmd("hyprctl dispatch fullscreen 0"))
+-- Gestión ventanas plus: fullscreen, pin, grupos, portapapeles y audio
+hl.bind(mainMod .. " + X",         hl.dsp.exec_cmd("hyprctl dispatch fullscreen 0"))
 hl.bind(mainMod .. " + SHIFT + X", hl.dsp.exec_cmd("hyprctl dispatch fullscreen 1"))
-hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd("hyprctl dispatch pin"))
-hl.bind(mainMod .. " + H", hl.dsp.exec_cmd("hyprctl dispatch togglegroup"))
-hl.bind(mainMod .. " + TAB", hl.dsp.exec_cmd("hyprctl dispatch changegroupactive f"))
+hl.bind(mainMod .. " + SHIFT + P", hl.dsp.exec_cmd("hyprctl dispatch pin"))
+hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd("noctalia msg panel-toggle clipboard"))
+hl.bind(mainMod .. " + O",         hl.dsp.exec_cmd("/home/luisfernando/.local/bin/audio-toggle"))
+hl.bind(mainMod .. " + H",         hl.dsp.exec_cmd("hyprctl dispatch togglegroup"))
+hl.bind(mainMod .. " + TAB",       hl.dsp.exec_cmd("hyprctl dispatch changegroupactive f"))
 hl.bind(mainMod .. " + SHIFT + H", hl.dsp.exec_cmd("hyprctl dispatch moveoutofgroup"))
 
 -- Fondos: picker visual con SUPER+W (estáticos + animados), N/B/G para estáticos vía Noctalia
@@ -509,6 +528,14 @@ hl.window_rule({
     opacity = "1.0 override 1.0 override",
     opaque = false,
     no_blur = false,
+})
+
+-- Discord oficial: opaco, misma opacidad con y sin foco
+-- 1.0 activo / 1.0 inactivo (sin transparencia).
+hl.window_rule({
+    name = "discord-opacity",
+    match = { class = "discord" },
+    opacity = "1.0 override 1.0 override",
 })
 
 -- For Noctalia Color templates
