@@ -22,7 +22,7 @@ elif command -v pacman >/dev/null; then
   echo "==> Detectado CachyOS / Arch Linux (pacman)"
   sudo pacman -S --needed --noconfirm \
     hyprland noctalia kitty starship git github-cli \
-    fzf ripgrep fd eza zoxide neovim \
+    fzf ripgrep fd eza zoxide \
     jq imagemagick ffmpeg uv bat brightnessctl playerctl fastfetch \
     hypridle hyprlock hyprpolkitagent ttf-jetbrains-mono-nerd \
     quickshell mpvpaper paru zen-browser-bin
@@ -220,7 +220,7 @@ if [ -z "$(git config --global user.email || true)" ]; then
   echo "  git: configurado user.email 'nankill@nankill.xyz'"
 fi
 git config --global pull.rebase true 2>/dev/null || true
-git config --global core.editor nvim 2>/dev/null || true
+git config --global core.editor "code --wait" 2>/dev/null || true
 
 echo ""
 echo "==> Setup completado con éxito."
