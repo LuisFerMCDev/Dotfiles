@@ -66,6 +66,7 @@ link_path "noctalia" "$HOME/.config/noctalia"
 link_path "kitty/kitty.conf" "$HOME/.config/kitty/kitty.conf"
 link_path "starship.toml" "$HOME/.config/starship.toml"
 link_path "fastfetch/config.jsonc" "$HOME/.config/fastfetch/config.jsonc"
+link_path "fastfetch/cachyos.png" "$HOME/.config/fastfetch/cachyos.png"
 link_path "environment.d/gaming.conf" "$HOME/.config/environment.d/gaming.conf"
 
 # Scripts de utilidad en ~/.local/bin
