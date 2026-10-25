@@ -1,0 +1,234 @@
+config_version = 14
+
+[bar.default]
+border_width = 0.0
+capsule = true
+capsule_fill = "#0a0a0a"
+capsule_opacity = 0.55000000000000004
+center = [ "clock" ]
+end = [ "audio-vis", "tray", "volume", "clipboard", "control-center" ]
+font_scale = 1.0999999828636646
+padding = 10
+radius = 14
+scale = 1.0
+start = [ "workspaces" ]
+thickness = 40
+widget_spacing = 6
+
+[control_center]
+hidden_tabs = [ "power" ]
+
+    [[control_center.shortcuts]]
+    type = "wifi"
+
+    [[control_center.shortcuts]]
+    type = "bluetooth"
+
+    [[control_center.shortcuts]]
+    type = "caffeine"
+
+    [[control_center.shortcuts]]
+    type = "notification"
+
+[dock]
+enabled = false
+
+[location]
+auto_locate = true
+
+[lockscreen]
+blurred_desktop = false
+enabled = false
+
+[lockscreen_widgets]
+enabled = false
+schema_version = 2
+widget_order = [ "lockscreen-login-box@HDMI-1", "lockscreen-login-box@FALLBACK", "lockscreen-login-box@HDMI-A-1" ]
+
+    [lockscreen_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@FALLBACK"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 960.0
+    cy = 898.0
+    output = "FALLBACK"
+    placement_height = 1080.0
+    placement_width = 1920.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@FALLBACK".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@HDMI-1"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 960.0
+    cy = 898.0
+    output = "HDMI-1"
+    placement_height = 1080.0
+    placement_width = 1920.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@HDMI-1".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@HDMI-A-1"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 960.0
+    cy = 898.0
+    output = "HDMI-A-1"
+    placement_height = 1080.0
+    placement_width = 1920.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@HDMI-A-1".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 20.0
+        center_password_text = true
+        input_opacity = 1.0
+        input_radius = 20.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_session_buttons = true
+        show_unlock_hint = false
+        show_weather = true
+
+[notification.filter.glassymusic]
+match = "glassymusic"
+play_sound = false
+save_history = false
+show_toast = false
+
+[plugins]
+enabled = []
+
+[shell]
+font_family = "Adwaita Sans"
+settings_window_translucent = true
+
+    [shell.launcher]
+    pinned = [ "zen-browser", "steam", "app.zen_browser.zen" ]
+
+    [shell.panel]
+    control_center_placement = "floating"
+    session_placement = "floating"
+    transparency_mode = "solid"
+    wallpaper_placement = "floating"
+
+    [shell.screenshot]
+    confirm_region = true
+    directory = "~/Descargas"
+    remember_last_region = true
+    show_cursor = true
+
+[theme]
+builtin = "Catppuccin"
+community_palette = "Catppuccin Mocha Blue"
+custom_palette = "MochaBlueHover"
+pure_black_dark = true
+source = "community"
+wallpaper_scheme = "vibrant"
+
+    [theme.templates]
+    builtin_ids = [ "gtk3", "gtk4", "kitty", "hyprland" ]
+
+[weather]
+enabled = true
+refresh_minutes = 30
+unit = "metric"
+
+[widget.audio-vis]
+bands = 20
+color_1 = "primary"
+color_2 = "secondary"
+interactive = true
+show_when_idle = false
+type = "audio_visualizer"
+width = 64
+
+    [widget.audio-vis.actions]
+    left = "panel-toggle control-center media"
+    right = "media toggle"
+
+[widget.brightness]
+show_label = false
+
+[widget.clock]
+format = "{:%I:%M %p}"
+tooltip_format = "{:%A, %d %B %Y}"
+
+[widget.launcher]
+capsule = false
+custom_image = ""
+glyph = "layout-grid"
+
+[widget.media]
+art_size = 28
+hide_album_art = false
+hide_when_no_media = true
+max_length = 220
+min_length = 80
+rotate_album_art = true
+title_scroll = "on_hover"
+
+[widget.network]
+show_label = false
+
+[widget.sysmon-cpu]
+show_value = true
+stat = "cpu_usage"
+type = "sysmon"
+visualization = "gauge"
+
+[widget.volume]
+show_label = false
+
+[widget.weather]
+max_length = 160
+show_condition = false
+show_temperature = true
+
+[widget.workspaces]
+capsule = false
+change_color_on_hover = false
+color = "#6c7086"
+focused_color = "#89b4fa"
+urgent_color = "#f38ba8"
