@@ -15,7 +15,7 @@ vimcmd_symbol = "[❮](bold blue)"
 [os]
 disabled = false
 style = "bold white"
-symbols = { Linux = " ", Fedora = " " }
+symbols = { Linux = " ", Fedora = " ", CachyOS = " ", Arch = " " }
 
 [directory]
 truncation_length = 3

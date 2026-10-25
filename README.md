@@ -39,11 +39,11 @@ chmod +x bootstrap.sh
 ```
 
 El script `bootstrap.sh` se encargará automáticamente de:
-- Instalar los paquetes nativos de Arch/CachyOS (`hyprland`, `noctalia`, `kitty`, `starship`, `fastfetch`, `fzf`, `bat`, `eza`, `zoxide`, etc.).
-- Instalar dependencias de AUR con `paru` o `yay` (`quickshell`, `mpvpaper`).
+- Instalar los paquetes nativos de Arch/CachyOS (`hyprland`, `noctalia`, `kitty`, `starship`, `fastfetch`, `fzf`, `bat`, `eza`, `zoxide`, `ttf-jetbrains-mono-nerd`, `hypridle`, `hyprlock`, `hyprpolkitagent`, `zen-browser-bin`, etc.).
+- Instalar dependencias nativas o AUR con `pacman` y `paru`/`yay` (`quickshell`, `mpvpaper`).
 - Crear los symlinks en `~/.config/` y `~/.local/bin/`.
-- Restaurar `settings.toml.pc-gamer` en `~/.local/state/noctalia/settings.toml`.
-- Configurar el bloque gamer en `~/.bashrc` (fzf Catppuccin, bat previews, alias gamer y fastfetch).
+- Restaurar `settings.toml.pc-gamer` en `~/.local/state/noctalia/settings.toml` y paletas custom.
+- Configurar el bloque gamer en shells: Fish (default en CachyOS), Bash y Zsh (fzf Catppuccin, bat previews, alias gamer y fastfetch).
 
 ---
 

@@ -10,23 +10,26 @@ mkdir -p "$BACKUP"
 echo "==> Repo: $REPO"
 echo "==> Backup previo en: $BACKUP"
 
+SKIP_PKG=false
+if [ "${1:-}" = "--no-pkg" ] || [ "${1:-}" = "--skip-pkg" ]; then
+  SKIP_PKG=true
+fi
+
 # 1. Detección de distribución e instalación de paquetes
-if command -v pacman >/dev/null; then
+if [ "$SKIP_PKG" = true ]; then
+  echo "==> Omitiendo instalación de paquetes (--no-pkg especificado)"
+elif command -v pacman >/dev/null; then
   echo "==> Detectado CachyOS / Arch Linux (pacman)"
   sudo pacman -S --needed --noconfirm \
     hyprland noctalia kitty starship git github-cli \
     fzf ripgrep fd eza zoxide neovim \
-    jq imagemagick ffmpeg uv bat brightnessctl playerctl fastfetch
+    jq imagemagick ffmpeg uv bat brightnessctl playerctl fastfetch \
+    hypridle hyprlock hyprpolkitagent ttf-jetbrains-mono-nerd \
+    quickshell mpvpaper paru zen-browser-bin
 
-  # AUR helper (paru o yay)
-  if command -v paru >/dev/null; then
-    echo "==> Instalando paquetes AUR con paru..."
-    paru -S --needed --noconfirm quickshell mpvpaper
-  elif command -v yay >/dev/null; then
-    echo "==> Instalando paquetes AUR con yay..."
-    yay -S --needed --noconfirm quickshell mpvpaper
-  else
-    echo "!! No se encontró paru ni yay. Instala 'quickshell' y 'mpvpaper' manualmente desde AUR."
+  # AUR fallback si se requiere
+  if ! command -v paru >/dev/null && command -v yay >/dev/null; then
+    yay -S --needed --noconfirm quickshell mpvpaper || true
   fi
 
 elif command -v dnf >/dev/null; then
@@ -74,12 +77,18 @@ link_path "bin/lock-screen" "$HOME/.local/bin/lock-screen"
 link_path "bin/sync-wallpaper-hook" "$HOME/.local/bin/sync-wallpaper-hook"
 chmod +x "$REPO"/bin/* 2>/dev/null || true
 
-# 2b. Restaurar configuración de Noctalia GUI si no existe
+# 2b. Restaurar configuración de Noctalia GUI y paletas
 NOCTALIA_STATE="$HOME/.local/state/noctalia"
-mkdir -p "$NOCTALIA_STATE"
-if [ ! -f "$NOCTALIA_STATE/settings.toml" ] && [ -f "$REPO/noctalia/settings.toml.pc-gamer" ]; then
-  echo "  noctalia: restaurando settings.toml base para PC Gamer"
-  cp "$REPO/noctalia/settings.toml.pc-gamer" "$NOCTALIA_STATE/settings.toml"
+mkdir -p "$NOCTALIA_STATE/community-palettes"
+if [ -f "$REPO/noctalia/settings.toml.pc-gamer" ]; then
+  if [ ! -f "$NOCTALIA_STATE/settings.toml" ] || ! grep -q "\[bar.default\]" "$NOCTALIA_STATE/settings.toml" 2>/dev/null; then
+    echo "  noctalia: restaurando settings.toml base para PC Gamer"
+    [ -f "$NOCTALIA_STATE/settings.toml" ] && cp "$NOCTALIA_STATE/settings.toml" "$NOCTALIA_STATE/settings.toml.bak"
+    cp "$REPO/noctalia/settings.toml.pc-gamer" "$NOCTALIA_STATE/settings.toml"
+  fi
+fi
+if [ -d "$REPO/noctalia/palettes" ]; then
+  cp -rn "$REPO"/noctalia/palettes/* "$NOCTALIA_STATE/community-palettes/" 2>/dev/null || true
 fi
 
 # 2c. HyprQuickPaper (selector visual de wallpapers)
@@ -101,7 +110,8 @@ if [ -d "$HQ" ]; then
   [ -f "$HOME/.cache/hyprquickpaper/current_wallpaper" ] || touch "$HOME/.cache/hyprquickpaper/current_wallpaper"
 fi
 
-# 3. Bloque dev-tools y rice en .bashrc
+# 3. Bloque dev-tools y rice en shells (.bashrc, fish, .zshrc)
+# 3a. Bash
 if ! grep -q "# Starship prompt + aliases (setup gamer)" "$HOME/.bashrc" 2>/dev/null; then
   # Detectar ruta fzf
   FZF_BINDINGS=""
@@ -124,11 +134,11 @@ alias ll='ls -lah --color=auto'
 alias ff='fastfetch'
 alias hreload='hyprctl reload'
 alias hmon='hyprctl monitors all | grep -E "Monitor|scale|@"'
-alias limpieza='flatpak uninstall --unused -y 2>/dev/null || true; rm -rf ~/.cache/gnome-software ~/.cache/thumbnails/*; journalctl --user --vacuum-size=100M; echo "--- Steam ---"; du -sh ~/.local/share/Steam 2>/dev/null; echo "--- Docker ---"; du -sh ~/.docker 2>/dev/null'
+alias limpieza='flatpak uninstall --unused -y 2>/dev/null || true; rm -rf ~/.cache/thumbnails/*; journalctl --user --vacuum-size=100M; echo "--- Steam ---"; du -sh ~/.local/share/Steam 2>/dev/null; echo "--- Docker ---"; du -sh ~/.docker 2>/dev/null'
 alias espacio='du -sh ~/* ~/.cache/* 2>/dev/null | sort -rh | head -n 12'
 
-eval "\$(starship init bash)"
-eval "\$(zoxide init bash)"
+eval "\$(starship init bash 2>/dev/null)" || true
+eval "\$(zoxide init bash 2>/dev/null)" || true
 
 # Fastfetch greeting
 if [[ \$- == *i* ]] && [ -z "\${FASTFETCH_SHOWN:-}" ]; then
@@ -141,10 +151,73 @@ else
   echo "  bashrc: bloque setup gamer ya existe"
 fi
 
+# 3b. Fish (shell por defecto en CachyOS)
+FISH_CONFIG="$HOME/.config/fish/config.fish"
+if [ -d "$HOME/.config/fish" ] || command -v fish >/dev/null 2>&1; then
+  mkdir -p "$HOME/.config/fish"
+  [ -f "$FISH_CONFIG" ] || touch "$FISH_CONFIG"
+  if ! grep -q "# Starship prompt + aliases (setup gamer)" "$FISH_CONFIG" 2>/dev/null; then
+    cat >> "$FISH_CONFIG" << 'EOF'
+
+# Starship prompt + aliases (setup gamer)
+set -gx FZF_DEFAULT_OPTS "--color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc --color=marker:#b4befe,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8 --color=selected-bg:#45475a --multi"
+set -gx FZF_CTRL_T_OPTS "--preview 'bat -n --color=always --line-range :300 {} 2>/dev/null || cat {}'"
+set -gx FZF_ALT_C_OPTS "--preview 'eza --tree --level=2 --icons --color=always {} 2>/dev/null || ls -la {}'"
+set -gx MANPAGER "sh -c 'col -bx | bat -l man -p'"
+alias lz='eza -la --icons --group-directories-first --git'
+alias ll='ls -lah --color=auto'
+alias ff='fastfetch'
+alias hreload='hyprctl reload'
+alias hmon='hyprctl monitors all | grep -E "Monitor|scale|@"'
+alias limpieza='flatpak uninstall --unused -y 2>/dev/null || true; rm -rf ~/.cache/thumbnails/*; journalctl --user --vacuum-size=100M; echo "--- Steam ---"; du -sh ~/.local/share/Steam 2>/dev/null; echo "--- Docker ---"; du -sh ~/.docker 2>/dev/null'
+alias espacio='du -sh ~/* ~/.cache/* 2>/dev/null | sort -rh | head -n 12'
+
+if command -v starship >/dev/null 2>&1
+    starship init fish | source
+end
+if command -v zoxide >/dev/null 2>&1
+    zoxide init fish | source
+end
+EOF
+    echo "  fish: bloque setup gamer agregado"
+  else
+    echo "  fish: bloque setup gamer ya existe"
+  fi
+fi
+
+# 3c. Zsh
+if [ -f "$HOME/.zshrc" ] && ! grep -q "# Starship prompt + aliases (setup gamer)" "$HOME/.zshrc" 2>/dev/null; then
+  cat >> "$HOME/.zshrc" << 'EOF'
+
+# Starship prompt + aliases (setup gamer)
+export FZF_DEFAULT_OPTS="--color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc --color=marker:#b4befe,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8 --color=selected-bg:#45475a --multi"
+export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always --line-range :300 {} 2>/dev/null || cat {}'"
+export FZF_ALT_C_OPTS="--preview 'eza --tree --level=2 --icons --color=always {} 2>/dev/null || ls -la {}'"
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+alias lz='eza -la --icons --group-directories-first --git'
+alias ll='ls -lah --color=auto'
+alias ff='fastfetch'
+alias hreload='hyprctl reload'
+alias hmon='hyprctl monitors all | grep -E "Monitor|scale|@"'
+alias limpieza='flatpak uninstall --unused -y 2>/dev/null || true; rm -rf ~/.cache/thumbnails/*; journalctl --user --vacuum-size=100M; echo "--- Steam ---"; du -sh ~/.local/share/Steam 2>/dev/null; echo "--- Docker ---"; du -sh ~/.docker 2>/dev/null'
+alias espacio='du -sh ~/* ~/.cache/* 2>/dev/null | sort -rh | head -n 12'
+
+eval "$(starship init zsh 2>/dev/null)" || true
+eval "$(zoxide init zsh 2>/dev/null)" || true
+EOF
+  echo "  zsh: bloque setup gamer agregado"
+fi
+
 # 4. Defaults git
 git config --global init.defaultBranch main 2>/dev/null || true
-[ -z "$(git config --global user.name || true)" ] && echo "!! Configura: git config --global user.name 'Tu Nombre'"
-[ -z "$(git config --global user.email || true)" ] && echo "!! Configura: git config --global user.email 'tu@email'"
+if [ -z "$(git config --global user.name || true)" ]; then
+  git config --global user.name "NanKill"
+  echo "  git: configurado user.name 'NanKill'"
+fi
+if [ -z "$(git config --global user.email || true)" ]; then
+  git config --global user.email "nankill@nankill.xyz"
+  echo "  git: configurado user.email 'nankill@nankill.xyz'"
+fi
 git config --global pull.rebase true 2>/dev/null || true
 git config --global core.editor nvim 2>/dev/null || true
 

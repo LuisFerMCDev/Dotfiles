@@ -41,7 +41,7 @@ hl.monitor({
 
 -- Set programs that you use
 local terminal    = "kitty"
-local fileManager = "nautilus --new-window"
+local fileManager = "command -v nautilus >/dev/null 2>&1 && nautilus --new-window || dolphin"
 local menu        = "noctalia msg panel-toggle launcher"
 
 
@@ -57,6 +57,8 @@ local menu        = "noctalia msg panel-toggle launcher"
 -- hl.on("hyprland.start", function () 
 -- end)
 hl.on("hyprland.start", function()
+    hl.exec_cmd("dbus-update-activation-environment --systemd --all")
+    hl.exec_cmd("xhost +SI:localuser:root")
     hl.exec_cmd("noctalia")
     hl.exec_cmd("/home/luisfernando/.local/bin/sync-wallpaper-hook")
     hl.exec_cmd("pidof hypridle || hypridle")
@@ -71,10 +73,11 @@ end)
 
 -- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Environment-variables/
 
+local cursorTheme = "Bibata-Modern-Ice"
 hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_SIZE", "24")
-hl.env("XCURSOR_THEME", "Bibata-Modern-Classic")
-hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Classic")
+hl.env("XCURSOR_THEME", cursorTheme)
+hl.env("HYPRCURSOR_THEME", cursorTheme)
 -- Hyprland arranca con PATH=/usr/local/bin:/usr/bin; sin ~/.local/bin no
 -- encuentra livepaper y todos los binds mueren en silencio
 hl.env("PATH", "/home/luisfernando/.local/bin:/usr/local/bin:/usr/bin")
@@ -408,7 +411,11 @@ local function zen_go(profile, class)
         return
     end
     zen_launch_at[class] = now
-    hl.exec_cmd("flatpak run app.zen_browser.zen -P " .. profile .. " --name " .. class)
+    if os.execute("command -v zen-browser >/dev/null 2>&1") == 0 then
+        hl.exec_cmd("zen-browser -P " .. profile .. " --name " .. class)
+    else
+        hl.exec_cmd("flatpak run app.zen_browser.zen -P " .. profile .. " --name " .. class)
+    end
 end
 hl.bind(mainMod .. " + Z", function() zen_go("Personal", "Zen-Personal") end)
 --------------------------------
@@ -503,10 +510,17 @@ for _, cls in ipairs({
         size = { 1200, 800 },
     })
 end
--- Nautilus principal: flotante grande centrado (SUPER+E)
+-- Nautilus / Dolphin principal: flotante grande centrado (SUPER+E)
 hl.window_rule({
     name  = "float-nautilus",
     match = { class = "org.gnome.Nautilus" },
+    float = true,
+    center = true,
+    size = { 1500, 900 },
+})
+hl.window_rule({
+    name  = "float-dolphin",
+    match = { class = "org.kde.dolphin" },
     float = true,
     center = true,
     size = { 1500, 900 },
