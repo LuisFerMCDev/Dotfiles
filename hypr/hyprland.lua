@@ -62,7 +62,7 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("noctalia")
     hl.exec_cmd("/home/luisfernando/.local/bin/sync-wallpaper-hook")
     hl.exec_cmd("pidof hypridle || hypridle")
-    hl.exec_cmd("pidof hyprpolkitagent || hyprpolkitagent")
+    hl.exec_cmd("pidof /usr/lib/hyprpolkitagent/hyprpolkitagent || /usr/lib/hyprpolkitagent/hyprpolkitagent")
     -- Fondo ESTÁTICO por defecto. Para volver al animado al iniciar sesión,
     -- descomenta la siguiente línea (o pulsa Super+T en cualquier momento):
     -- hl.exec_cmd("pidof livepaper || /home/luisfernando/.local/bin/livepaper --restore")
