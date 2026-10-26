@@ -68,6 +68,8 @@ link_path "starship.toml" "$HOME/.config/starship.toml"
 link_path "fastfetch/config.jsonc" "$HOME/.config/fastfetch/config.jsonc"
 link_path "fastfetch/cachyos.png" "$HOME/.config/fastfetch/cachyos.png"
 link_path "environment.d/gaming.conf" "$HOME/.config/environment.d/gaming.conf"
+link_path "environment.d/uwsm.conf" "$HOME/.config/environment.d/uwsm.conf"
+link_path "profile" "$HOME/.profile"
 
 # Scripts de utilidad en ~/.local/bin
 mkdir -p "$HOME/.local/bin"

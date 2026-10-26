@@ -15,7 +15,7 @@ wallpaper_scheme = "vibrant"
 pure_black_dark = false
 
   [theme.templates]
-  builtin_ids = ["gtk3", "gtk4", "kitty", "hyprland"]
+  builtin_ids = ["gtk3", "gtk4", "kitty", "hyprland", "qt", "kcolorscheme"]
 
 # Barra flotante SIN fondo ni borde (transparente total)
 [bar.default]
