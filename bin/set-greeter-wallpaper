@@ -12,16 +12,12 @@ if [ ! -f "$IMG" ]; then
     exit 1
 fi
 
-# Prepara la estructura de sincronización con la paleta y configuración de Noctalia
-noctalia msg greeter-sync >/dev/null 2>&1 || true
+EXT="${IMG##*.}"
+DEST="/usr/share/sddm/themes/sddm-astronaut-theme/Backgrounds/custom_bg.${EXT}"
 
-STAGING="/run/user/$(id -u)/noctalia-greeter-sync"
-if [ ! -d "$STAGING" ]; then
-    mkdir -p "$STAGING"
-fi
-
-cp -f "$IMG" "$STAGING/wallpaper.jpg"
-cp -f "$IMG" "$STAGING/wallpaper-HDMI-A-1.jpg"
-
-echo "Aplicando $IMG como fondo de inicio de sesión..."
-exec pkexec /usr/bin/noctalia-greeter-apply-appearance --sync "$STAGING"
+exec pkexec bash -c "
+cp -f '$IMG' '$DEST'
+chmod 644 '$DEST'
+sed -i 's|^Background=.*|Background=\"Backgrounds/custom_bg.${EXT}\"|' /usr/share/sddm/themes/sddm-astronaut-theme/Themes/astronaut.conf
+echo '✅ Fondo de SDDM Astronaut actualizado con éxito a: $IMG'
+"
