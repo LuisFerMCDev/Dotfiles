@@ -1,0 +1,2 @@
+#!/bin/bash
+exec pkexec /usr/bin/noctalia-greeter-apply-appearance --sync /run/user/1000/noctalia-greeter-sync
