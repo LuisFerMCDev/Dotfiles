@@ -1,0 +1,27 @@
+#!/bin/bash
+set -euo pipefail
+
+if [ -z "${1:-}" ]; then
+    echo "Uso: set-greeter-wallpaper /ruta/a/la/imagen.jpg"
+    exit 1
+fi
+
+IMG="$(realpath "$1")"
+if [ ! -f "$IMG" ]; then
+    echo "Error: El archivo no existe: $IMG"
+    exit 1
+fi
+
+# Prepara la estructura de sincronización con la paleta y configuración de Noctalia
+noctalia msg greeter-sync >/dev/null 2>&1 || true
+
+STAGING="/run/user/$(id -u)/noctalia-greeter-sync"
+if [ ! -d "$STAGING" ]; then
+    mkdir -p "$STAGING"
+fi
+
+cp -f "$IMG" "$STAGING/wallpaper.jpg"
+cp -f "$IMG" "$STAGING/wallpaper-HDMI-A-1.jpg"
+
+echo "Aplicando $IMG como fondo de inicio de sesión..."
+exec pkexec /usr/bin/noctalia-greeter-apply-appearance --sync "$STAGING"
