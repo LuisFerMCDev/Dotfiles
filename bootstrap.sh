@@ -78,6 +78,8 @@ link_path "bin/wall-toggle" "$HOME/.local/bin/wall-toggle"
 link_path "bin/audio-toggle" "$HOME/.local/bin/audio-toggle"
 link_path "bin/lock-screen" "$HOME/.local/bin/lock-screen"
 link_path "bin/sync-wallpaper-hook" "$HOME/.local/bin/sync-wallpaper-hook"
+link_path "bin/set-greeter-wallpaper" "$HOME/.local/bin/set-greeter-wallpaper"
+link_path "bin/sync-greeter" "$HOME/.local/bin/sync-greeter"
 chmod +x "$REPO"/bin/* 2>/dev/null || true
 
 # 2b. Restaurar configuración de Noctalia GUI y paletas
